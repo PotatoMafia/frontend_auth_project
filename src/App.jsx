@@ -1,45 +1,25 @@
-import "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import LoginPage from "./component/LoginPage.jsx";
-import MainPage from "./component/MainPage.jsx";
-import MfaPage from "./component/MFAPage.jsx";
-import LoginChoicePage from "./component/LoginChoicePage.jsx";
-import { AuthProvider, useAuth } from "./context/AuthContext";
+import 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
-// eslint-disable-next-line react/prop-types
-const PrivateRoute = ({ children }) => {
-    const { token } = useAuth();
-
-    // Если пользователь не зарегистрирован или не авторизован, перенаправляем на страницу выбора способа входа
-    if (!token) {
-        return <Navigate to="/login-choice" />;
-    }
-
-    return children; // Если пользователь авторизован, показываем защищенную страницу
-};
-
+// Импорты для страниц
+import LoginChoicePage from './component/LoginChoicePage';
+import LoginForm from './component/LoginForm';
+import LoginOtp from './component/LoginOtp';
+import Login2fa from './component/Login2fa';
 
 function App() {
     return (
-        <AuthProvider>
-            <Router>
+        <Router>
+            <div className="App">
+                <h1>Authentication App</h1>
                 <Routes>
-                    <Route path="/" element={<LoginChoicePage />} /> {/* Страница выбора способа входа */}
-                    <Route path="/login" element={<LoginPage />} /> {/* Страница логина с паролем */}
-                    <Route path="/mfa" element={<MfaPage />} /> {/* Страница двухфакторной аутентификации */}
-                    <Route path="/login-choice" element={<LoginChoicePage />} /> {/* Страница выбора входа */}
-                    <Route
-                        path="/main"
-                        element={
-                            <PrivateRoute>
-                                <MainPage />
-                            </PrivateRoute>
-                        }
-                    />
-                    <Route path="*" element={<Navigate to="/login-choice" />} /> {/* Страница по умолчанию */}
+                    <Route path="/" element={<LoginChoicePage />} /> {/* Страница выбора способа логина */}
+                    <Route path="/login" element={<LoginForm />} />  {/* Страница для логина с email и паролем */}
+                    <Route path="/login-otp" element={<LoginOtp />} /> {/* Страница для логина через OTP */}
+                    <Route path="/login-2fa" element={<Login2fa />} /> {/* Страница для логина через 2FA */}
                 </Routes>
-            </Router>
-        </AuthProvider>
+            </div>
+        </Router>
     );
 }
 
